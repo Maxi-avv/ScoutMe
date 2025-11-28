@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+
+{% block title %}Mi Perfil - ScoutMe{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Mi Perfil de Jugador</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    {{ form.hidden_tag() }}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.nombre.label(class="form-label") }}
+                            {{ form.nombre(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.apellido.label(class="form-label") }}
+                            {{ form.apellido(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.fecha_nacimiento.label(class="form-label") }}
+                            {{ form.fecha_nacimiento(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Edad</label>
+                            <input type="text" class="form-control" value="{{ player.edad or '' }}" readonly>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.deporte.label(class="form-label") }}
+                            {{ form.deporte(class="form-select") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.posicion.label(class="form-label") }}
+                            {{ form.posicion(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.nivel.label(class="form-label") }}
+                            {{ form.nivel(class="form-select") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.pais.label(class="form-label") }}
+                            {{ form.pais(class="form-select") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.ciudad.label(class="form-label") }}
+                            {{ form.ciudad(class="form-control") }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            {{ form.phone_code.label(class="form-label") }}
+                            {{ form.phone_code(class="form-select") }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            {{ form.telefono.label(class="form-label") }}
+                            {{ form.telefono(class="form-control", placeholder="Número sin código") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            {{ form.altura.label(class="form-label") }}
+                            {{ form.altura(class="form-control") }}
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            {{ form.peso.label(class="form-label") }}
+                            {{ form.peso(class="form-control") }}
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        {{ form.sitio_web.label(class="form-label") }}
+                        {{ form.sitio_web(class="form-control") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.descripcion.label(class="form-label") }}
+                        {{ form.descripcion(class="form-control", rows="3") }}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Mis Videos</h5>
+            </div>
+            <div class="card-body">
+                {% if player.videos %}
+                    {% for video in player.videos %}
+                        <div class="mb-3">
+                            <h6>{{ video.titulo }}</h6>
+                            {% if video.tipo == 'youtube' %}
+                                <div class="ratio ratio-16x9">
+                                    <iframe src="https://www.youtube.com/embed/{{ video.url.split('v=')[1].split('&')[0] if 'v=' in video.url else video.url.split('/')[-1].split('?')[0] }}" allowfullscreen></iframe>
+                                </div>
+                            {% else %}
+                                <video controls class="w-100">
+                                    <source src="{{ url_for('uploaded_file', filename=video.filename) }}" type="video/mp4">
+                                </video>
+                            {% endif %}
+                            {% if video.descripcion %}
+                                <p class="small text-muted mt-1">{{ video.descripcion }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No has subido videos aún.</p>
+                {% endif %}
+                <a href="{{ url_for('subir_video') }}" class="btn btn-outline-primary btn-sm">Subir Nuevo Video</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

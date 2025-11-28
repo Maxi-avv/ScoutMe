@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}Subir Video - ScoutMe{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title text-center mb-0">Subir Video</h3>
+            </div>
+            <div class="card-body">
+                <form method="POST" enctype="multipart/form-data">
+                    {{ form.hidden_tag() }}
+                    <div class="mb-3">
+                        {{ form.titulo.label(class="form-label") }}
+                        {{ form.titulo(class="form-control") }}
+                        {% if form.titulo.errors %}
+                            <div class="text-danger">
+                                {% for error in form.titulo.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.descripcion.label(class="form-label") }}
+                        {{ form.descripcion(class="form-control", rows="3") }}
+                    </div>
+                    <div class="mb-3">
+                        {{ form.tipo.label(class="form-label") }}
+                        {{ form.tipo(class="form-select") }}
+                    </div>
+                    <div class="mb-3" id="url-field" style="display: none;">
+                        {{ form.url.label(class="form-label") }}
+                        {{ form.url(class="form-control", placeholder="https://www.youtube.com/watch?v=...") }}
+                        {% if form.url.errors %}
+                            <div class="text-danger">
+                                {% for error in form.url.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="mb-3" id="archivo-field">
+                        {{ form.archivo.label(class="form-label") }}
+                        {{ form.archivo(class="form-control") }}
+                        <div class="form-text">Formatos soportados: MP4, MOV, WebM, MKV. Tamaño máximo: 100MB</div>
+                        {% if form.archivo.errors %}
+                            <div class="text-danger">
+                                {% for error in form.archivo.errors %}
+                                    <small>{{ error }}</small>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="d-grid">
+                        {{ form.submit(class="btn btn-primary") }}
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer text-center">
+                <a href="{{ url_for('perfil_jugador') }}" class="btn btn-secondary">Volver al Perfil</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

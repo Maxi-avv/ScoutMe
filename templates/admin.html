@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+
+{% block title %}Panel de Administración - ScoutMe{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Panel de Administración</h3>
+            </div>
+            <div class="card-body">
+                <h4>Usuarios Registrados</h4>
+                {% if users %}
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                    <th>Activo</th>
+                                    <th>Fecha de Registro</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for user in users %}
+                                    <tr>
+                                        <td>{{ user.id }}</td>
+                                        <td>{{ user.email }}</td>
+                                        <td>
+                                            <span class="badge bg-{% if user.role == 'admin' %}danger{% elif user.role == 'ojeador' %}warning{% else %}primary{% endif %}">
+                                                {{ user.role }}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            {% if user.is_active %}
+                                                <span class="badge bg-success">Activo</span>
+                                            {% else %}
+                                                <span class="badge bg-danger">Inactivo</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{ user.created_at.strftime('%d/%m/%Y') }}</td>
+                                        <td>
+                                            <button class="btn btn-sm btn-outline-primary">Editar</button>
+                                            {% if user.is_active %}
+                                                <button class="btn btn-sm btn-outline-warning">Desactivar</button>
+                                            {% else %}
+                                                <button class="btn btn-sm btn-outline-success">Activar</button>
+                                            {% endif %}
+                                            <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No hay usuarios registrados.</p>
+                {% endif %}
+
+                <hr>
+                <h4>Estadísticas</h4>
+                <div class="row">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ users|length }}</h5>
+                                <p class="card-text">Usuarios Totales</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ users|selectattr('role', 'equalto', 'jugador')|list|length }}</h5>
+                                <p class="card-text">Jugadores</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ users|selectattr('role', 'equalto', 'ojeador')|list|length }}</h5>
+                                <p class="card-text">Ojeadores</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ users|selectattr('is_active', 'equalto', True)|list|length }}</h5>
+                                <p class="card-text">Usuarios Activos</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

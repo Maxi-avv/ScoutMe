@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ event.titulo }} - ScoutMe{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8 mx-auto">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">{{ event.titulo }}</h3>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <p><strong>Fecha:</strong> {{ event.fecha.strftime('%d/%m/%Y %H:%M') }}</p>
+                        <p><strong>Ubicación:</strong> {{ event.ubicacion or 'No especificada' }}</p>
+                        <p><strong>Deporte:</strong> {{ event.deporte or 'General' }}</p>
+                        {% if event.capacidad_maxima %}
+                            <p><strong>Capacidad Máxima:</strong> {{ event.capacidad_maxima }}</p>
+                        {% endif %}
+                    </div>
+                    <div class="col-md-6">
+                        <p><strong>Organizador:</strong> {{ event.scout.nombre }} {{ event.scout.apellido }}</p>
+                        {% if event.scout.empresa %}
+                            <p><strong>Empresa:</strong> {{ event.scout.empresa }}</p>
+                        {% endif %}
+                        {% if event.scout.telefono %}
+                            <p><strong>Teléfono:</strong> {{ event.scout.telefono }}</p>
+                        {% endif %}
+                        {% if event.scout.sitio_web %}
+                            <p><strong>Sitio Web:</strong> <a href="{{ event.scout.sitio_web }}" target="_blank">{{ event.scout.sitio_web }}</a></p>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if event.descripcion %}
+                    <hr>
+                    <h5>Descripción</h5>
+                    <p>{{ event.descripcion }}</p>
+                {% endif %}
+                {% if current_user.is_authenticated %}
+                    <hr>
+                    <div class="d-flex gap-2">
+                        <a href="{{ url_for('enviar_mensaje') }}" class="btn btn-primary">Contactar Organizador</a>
+                        {% if current_user.role == 'jugador' %}
+                            <button class="btn btn-outline-primary">Inscribirme al Evento</button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

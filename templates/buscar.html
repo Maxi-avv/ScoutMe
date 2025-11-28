@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Buscar Jugadores - ScoutMe{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h3 class="card-title mb-0">Buscar Jugadores</h3>
+            </div>
+            <div class="card-body">
+                <form method="GET" class="mb-4" id="search-form">
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            {{ form.deporte.label(class="form-label") }}
+                            {{ form.deporte(class="form-select") }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            {{ form.posicion.label(class="form-label") }}
+                            {{ form.posicion(class="form-control") }}
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            {{ form.edad_min.label(class="form-label") }}
+                            {{ form.edad_min(class="form-control") }}
+                        </div>
+                        <div class="col-md-2 mb-3">
+                            {{ form.edad_max.label(class="form-label") }}
+                            {{ form.edad_max(class="form-control") }}
+                        </div>
+                        <div class="col-md-2 mb-3 d-flex align-items-end">
+                            {{ form.submit(class="btn btn-primary w-100") }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            {{ form.pais.label(class="form-label") }}
+                            {{ form.pais(class="form-control") }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            {{ form.ciudad.label(class="form-label") }}
+                            {{ form.ciudad(class="form-control") }}
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            {{ form.nivel.label(class="form-label") }}
+                            {{ form.nivel(class="form-select") }}
+                        </div>
+                    </div>
+                </form>
+
+                {% if players %}
+                    <div class="row">
+                        {% for player in players %}
+                            <div class="col-md-6 col-lg-4 mb-4">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <h5 class="card-title">{{ player.nombre }} {{ player.apellido }}</h5>
+                                        <p class="card-text">
+                                            <strong>Deporte:</strong> {{ player.deporte }}<br>
+                                            <strong>Posición:</strong> {{ player.posicion or 'No especificada' }}<br>
+                                            <strong>Edad:</strong> {{ player.edad or 'No especificada' }}<br>
+                                            <strong>Nivel:</strong> {{ player.nivel or 'No especificado' }}<br>
+                                            <strong>Ubicación:</strong> {{ player.ciudad }}, {{ player.pais }}
+                                        </p>
+                                        {% if player.descripcion %}
+                                            <p class="card-text">{{ player.descripcion[:100] }}{% if player.descripcion|length > 100 %}...{% endif %}</p>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-footer">
+                                        <a href="{{ url_for('enviar_mensaje') }}" class="btn btn-primary btn-sm">Contactar</a>
+                                        {% if player.videos %}
+                                            <span class="badge bg-info">{{ player.videos|length }} video(s)</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="text-center">
+                        <p class="text-muted">No se encontraron jugadores con los criterios especificados.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

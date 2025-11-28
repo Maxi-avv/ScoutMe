@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - ScoutMe{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8 mx-auto text-center">
+        <h1 class="display-4 mb-4">Bienvenido a ScoutMe</h1>
+        <p class="lead mb-4">
+            La plataforma que conecta jugadores deportivos con ojeadores profesionales.
+            Descubre talento, organiza eventos y construye tu carrera deportiva.
+        </p>
+
+        {% if not current_user.is_authenticated %}
+        <div class="row g-3 justify-content-center">
+            <div class="col-auto">
+                <a href="{{ url_for('register_jugador') }}" class="btn btn-primary btn-lg">
+                    Registrarme como Jugador
+                </a>
+            </div>
+            <div class="col-auto">
+                <a href="{{ url_for('register_ojeador') }}" class="btn btn-outline-primary btn-lg">
+                    Registrarme como Ojeador
+                </a>
+            </div>
+        </div>
+
+        <div class="mt-5">
+            <h2 class="h3 mb-4">¿Ya tienes cuenta?</h2>
+            <a href="{{ url_for('login') }}" class="btn btn-secondary btn-lg">
+                Iniciar Sesión
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-5">
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Para Jugadores</h5>
+                <p class="card-text">
+                    Crea tu perfil deportivo, sube videos de tus mejores jugadas y
+                    conecta con ojeadores de todo el mundo.
+                </p>
+                <ul class="list-unstyled">
+                    <li>✓ Perfiles personalizados</li>
+                    <li>✓ Subida de videos</li>
+                    <li>✓ Búsqueda avanzada</li>
+                    <li>✓ Mensajería directa</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Para Ojeadores</h5>
+                <p class="card-text">
+                    Descubre nuevos talentos, organiza eventos deportivos y
+                    construye tu red de contactos profesionales.
+                </p>
+                <ul class="list-unstyled">
+                    <li>✓ Buscador de jugadores</li>
+                    <li>✓ Gestión de eventos</li>
+                    <li>✓ Perfiles verificados</li>
+                    <li>✓ Comunicación directa</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-4">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5 class="card-title">Características</h5>
+                <p class="card-text">
+                    Una plataforma completa para el descubrimiento y desarrollo
+                    de talento deportivo.
+                </p>
+                <ul class="list-unstyled">
+                    <li>✓ Interfaz intuitiva</li>
+                    <li>✓ Seguridad garantizada</li>
+                    <li>✓ Soporte multi-idioma</li>
+                    <li>✓ Actualizaciones constantes</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
