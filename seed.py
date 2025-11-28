@@ -289,18 +289,34 @@ def seed_database():
 
         db.session.commit()
 
-        # Create sample messages
+        # Create sample messages with conversation threads
         users = User.query.all()
         for i in range(5):
             sender = random.choice(users)
             receiver = random.choice([u for u in users if u.id != sender.id])
+
+            # Generate conversation ID
+            conversation_id = f"{min(sender.id, receiver.id)}_{max(sender.id, receiver.id)}_prueba_{i+1}"
+
             message = Message(
                 sender_id=sender.id,
                 receiver_id=receiver.id,
                 subject=f"Mensaje de prueba {i+1}",
-                content=f"Este es un mensaje de prueba número {i+1} para demostrar la funcionalidad del sistema de mensajería."
+                content=f"Este es un mensaje de prueba número {i+1} para demostrar la funcionalidad del sistema de mensajería.",
+                conversation_id=conversation_id
             )
             db.session.add(message)
+
+            # Add a reply to create conversation threads
+            if random.choice([True, False]):
+                reply = Message(
+                    sender_id=receiver.id,
+                    receiver_id=sender.id,
+                    subject=f"Re: Mensaje de prueba {i+1}",
+                    content=f"Gracias por tu mensaje de prueba número {i+1}. Esta es una respuesta de ejemplo.",
+                    conversation_id=conversation_id
+                )
+                db.session.add(reply)
 
         db.session.commit()
 

@@ -5,40 +5,44 @@
 {% block content %}
 <div class="row">
     <div class="col-md-12">
-        <div class="card">
+        <div class="card shadow-sm">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="card-title mb-0">Mis Mensajes</h3>
-                <a href="{{ url_for('enviar_mensaje') }}" class="btn btn-primary btn-sm">Enviar Mensaje</a>
+                <h3 class="card-title mb-0">Mis Conversaciones</h3>
+                <a href="{{ url_for('enviar_mensaje') }}" class="btn btn-primary btn-sm">Nuevo Mensaje</a>
             </div>
+
             <div class="card-body">
-                {% if messages %}
+                {% if conversations %}
                     <div class="list-group">
-                        {% for message in messages %}
-                            <div class="list-group-item">
+                        {% for conv in conversations %}
+                            <a href="{{ url_for('conversacion', conversation_id=conv.conversation_id) }}" class="list-group-item list-group-item-action">
                                 <div class="d-flex w-100 justify-content-between">
-                                    <h5 class="mb-1">{{ message.subject }}</h5>
-                                    <small>{{ message.sent_at.strftime('%d/%m/%Y %H:%M') }}</small>
+                                    <h5 class="mb-1">{{ conv.other_user.email }} <small class="text-muted">({{ conv.other_user.role }})</small></h5>
+                                    <small>{{ conv.latest_message.sent_at.strftime('%d/%m/%Y %H:%M') }}</small>
                                 </div>
-                                <p class="mb-1">De: {{ message.sender.email }}</p>
-                                <p class="mb-1">{{ message.content[:100] }}{% if message.content|length > 100 %}...{% endif %}</p>
-                                {% if not message.is_read %}
-                                    <span class="badge bg-primary">Nuevo</span>
-                                {% endif %}
-                                <div class="mt-2">
-                                    <button class="btn btn-sm btn-outline-primary" onclick="toggleMessage({{ message.id }})">Ver Completo</button>
-                                    <button class="btn btn-sm btn-outline-danger">Eliminar</button>
+                                <p class="mb-1"><strong>Asunto:</strong> {{ conv.latest_message.subject }}</p>
+                                <p class="mb-1">{{ conv.latest_message.content[:100] }}{% if conv.latest_message.content|length > 100 %}...{% endif %}</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    {% if conv.unread_count > 0 %}
+                                        <span class="badge bg-primary">{{ conv.unread_count }} mensaje(s) sin leer</span>
+                                    {% else %}
+                                        <span class="text-muted">Todos los mensajes leídos</span>
+                                    {% endif %}
+                                    <small class="text-muted">
+                                        {% if conv.latest_message.sender_id == current_user.id %}
+                                            Enviado
+                                        {% else %}
+                                            Recibido
+                                        {% endif %}
+                                    </small>
                                 </div>
-                                <div id="message-{{ message.id }}" class="mt-2" style="display: none;">
-                                    <hr>
-                                    <p>{{ message.content }}</p>
-                                </div>
-                            </div>
+                            </a>
                         {% endfor %}
                     </div>
                 {% else %}
                     <div class="text-center">
-                        <p class="text-muted">No tienes mensajes.</p>
-                        <a href="{{ url_for('enviar_mensaje') }}" class="btn btn-primary">Enviar tu Primer Mensaje</a>
+                        <p class="text-muted">No tienes conversaciones activas.</p>
+                        <a href="{{ url_for('enviar_mensaje') }}" class="btn btn-primary">Iniciar tu Primera Conversación</a>
                     </div>
                 {% endif %}
             </div>

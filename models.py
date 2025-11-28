@@ -94,3 +94,4 @@ class Message(db.Model):
     content = db.Column(db.Text, nullable=False)
     is_read = db.Column(db.Boolean, default=False)
     sent_at = db.Column(db.DateTime, default=datetime.utcnow)
+    conversation_id = db.Column(db.String(100), nullable=False)  # Unique ID for conversation thread

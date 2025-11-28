@@ -107,6 +107,72 @@ PHONE_CODES = [
     ('+221', '🇸🇳 +221 Senegal')
 ]
 
+# Sport-specific positions
+SPORT_POSITIONS = {
+    'fútbol': [
+        ('delantero', 'Delantero'),
+        ('mediocampista', 'Mediocampista'),
+        ('defensor', 'Defensor'),
+        ('portero', 'Portero'),
+        ('extremo', 'Extremo'),
+        ('centrocampista', 'Centrocampista'),
+        ('lateral', 'Lateral'),
+        ('central', 'Central')
+    ],
+    'baloncesto': [
+        ('base', 'Base'),
+        ('escolta', 'Escolta'),
+        ('alero', 'Alero'),
+        ('ala-pivot', 'Ala-Pivot'),
+        ('pivot', 'Pivot'),
+        ('playmaker', 'Playmaker'),
+        ('shooting-guard', 'Shooting Guard'),
+        ('small-forward', 'Small Forward'),
+        ('power-forward', 'Power Forward'),
+        ('center', 'Center')
+    ],
+    'tenis': [
+        ('individual', 'Individual'),
+        ('dobles', 'Dobles'),
+        ('mixto', 'Mixto')
+    ],
+    'voleibol': [
+        ('punta', 'Punta'),
+        ('libero', 'Libero'),
+        ('central', 'Central'),
+        ('opuesto', 'Opuesto'),
+        ('colocador', 'Colocador'),
+        ('receptor', 'Receptor'),
+        ('levantador', 'Levantador'),
+        ('defensor', 'Defensor')
+    ],
+    'natación': [
+        ('estilo_libre', 'Estilo Libre'),
+        ('pecho', 'Pecho'),
+        ('espalda', 'Espalda'),
+        ('mariposa', 'Mariposa'),
+        ('combinado_individual', 'Combinado Individual'),
+        ('relevos', 'Relevos'),
+        ('relevos_mixtos', 'Relevos Mixtos')
+    ],
+    'atletismo': [
+        ('velocista', 'Velocista (100m, 200m, 400m)'),
+        ('medio_fondo', 'Medio Fondo (800m, 1500m)'),
+        ('fondo', 'Fondo (5000m, 10000m, maratón)'),
+        ('marcha', 'Marcha'),
+        ('saltos', 'Saltos (altura, longitud, triple, pértiga)'),
+        ('lanzamientos', 'Lanzamientos (jabalina, disco, martillo, bala)'),
+        ('heptathlon', 'Heptathlon'),
+        ('decathlon', 'Decathlon'),
+        ('relevos', 'Relevos (4x100m, 4x400m)')
+    ],
+    'otro': [
+        ('general', 'General'),
+        ('especialista', 'Especialista'),
+        ('multidisciplinario', 'Multidisciplinario')
+    ]
+}
+
 from flask_wtf import FlaskForm
 from wtforms import (
     StringField, PasswordField, SubmitField, SelectField, TextAreaField,
@@ -163,7 +229,7 @@ class RegisterPlayerForm(FlaskForm):
         coerce=str
     )
 
-    posicion = StringField('Posición', validators=[Optional(), Length(max=50)])
+    posicion = SelectField('Posición', choices=[('', 'Primero selecciona un deporte')], validators=[Optional()])
 
     nivel = SelectField(
         'Nivel',
@@ -244,7 +310,7 @@ class PlayerProfileForm(FlaskForm):
         coerce=str
     )
 
-    posicion = StringField('Posición', validators=[Optional(), Length(max=50)])
+    posicion = SelectField('Posición', choices=[('', 'Primero selecciona un deporte')], validators=[Optional()])
 
     nivel = SelectField(
         'Nivel',
@@ -340,7 +406,12 @@ class MessageForm(FlaskForm):
     receiver_id = SelectField('Destinatario', coerce=int, validators=[DataRequired()])
     subject = StringField('Asunto', validators=[DataRequired(), Length(max=200)])
     content = TextAreaField('Mensaje', validators=[DataRequired()])
+    conversation_id = StringField('Conversation ID')  # Hidden field for conversation threads
     submit = SubmitField('Enviar Mensaje')
+
+class ReplyForm(FlaskForm):
+    content = TextAreaField('Mensaje', validators=[DataRequired()])
+    submit = SubmitField('Enviar Respuesta')
 
 
 # ----------------------
@@ -363,7 +434,7 @@ class SearchForm(FlaskForm):
         coerce=str
     )
 
-    posicion = StringField('Posición', validators=[Optional()])
+    posicion = SelectField('Posición', choices=[('', 'Todas las posiciones')], validators=[Optional()])
     edad_min = IntegerField('Edad Mínima', validators=[Optional(), NumberRange(min=0)])
     edad_max = IntegerField('Edad Máxima', validators=[Optional(), NumberRange(min=0)])
     pais = StringField('País', validators=[Optional()])

@@ -40,11 +40,11 @@
                 {% if current_user.is_authenticated %}
                     <hr>
                     <div class="d-flex gap-2">
-                        <a href="{{ url_for('enviar_mensaje') }}" class="btn btn-primary">Contactar Organizador</a>
-                        {% if current_user.role == 'jugador' %}
-                            <button class="btn btn-outline-primary">Inscribirme al Evento</button>
-                        {% endif %}
-                    </div>
+                            <a href="{{ url_for('enviar_mensaje', receiver=event.scout.user.id) }}" class="btn btn-primary">Contactar Organizador</a>
+                            {% if current_user.role == 'jugador' %}
+                                <button class="btn btn-outline-primary">Inscribirme al Evento</button>
+                            {% endif %}
+                        </div>
                 {% endif %}
             </div>
         </div>
